@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GRAM Ecosystem | Burger Disassemble Simulator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Base Official Colors */
+            --base-blue: #0000FF;
+            --base-black: #0A0B0D; 
+            --base-white: #FFFFFF; 
+            --base-gray-10: #EEF0F3;
+            --base-gray-15: #DEE1E7;
+            --base-gray-60: #5B616E;
+            
+            /* Semantic Colors */
+            --primary: var(--base-blue);
+            --bg-body: var(--base-gray-10);
+            --bg-card: var(--base-white);
+            --text-main: var(--base-black);
+            --text-muted: var(--base-gray-60);
+            --border-color: var(--base-gray-15);
+            
+            /* Token Grade Colors */
+            --grade-s: #FC401F; 
+            --grade-a: #9932CC; 
+            --grade-b: #3C8AFF; 
+            --grade-c: #66C800; 
+            --grade-d: var(--base-gray-60);
+        }
+
+        body {
+            font-family: 'Base Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 24px;
+            box-sizing: border-box;
+            line-height: 1.5;
+        }
+
+        .container {
+            background-color: var(--bg-card);
+            width: 100%;
+            max-width: 520px;
+            padding: 40px 32px;
+            border-radius: 16px;
+            box-shadow: 0 4px 24px rgba(10, 11, 13, 0.06);
+            border: 1px solid var(--border-color);
+            text-align: center;
+        }
+
+        .logo-img {
+            width: 72px;
+            height: 72px;
+            margin-bottom: 16px;
+            border-radius: 16px; 
+            border: 1px solid var(--border-color);
+        }
+        
+        .banner-link {
+            display: block;
+            margin-bottom: 24px;
+            transition: transform 0.2s ease;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+        .banner-link:hover {
+            transform: scale(1.02);
+            border-color: var(--primary);
+        }
+        .banner-img {
+            width: 100%;
+            display: block;
+        }
+
+        h1 { 
+            margin: 0; 
+            font-size: 1.75rem; 
+            font-weight: 800; 
+            color: var(--text-main); 
+            letter-spacing: -0.02em; 
+            margin-bottom: 24px;
+        }
+        h1 span { color: var(--primary); }
+        
+        .desc-box {
+            background: #F4F7FF; 
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            text-align: left;
+            border-left: 4px solid var(--primary);
+        }
+        .desc-box p { color: var(--text-muted); font-size: 0.9rem; margin: 8px 0; font-weight: 500; }
+        .desc-box a { color: var(--primary); text-decoration: none; font-weight: 600; }
+        .desc-box a:hover { text-decoration: underline; }
+
+        .input-group { margin-bottom: 24px; text-align: left; }
+        input[type="text"] {
+            width: 100%; padding: 16px; border-radius: 12px;
+            border: 1px solid var(--border-color); background: var(--base-white);
+            color: var(--text-main); font-size: 1rem; box-sizing: border-box;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+        input[type="text"]:focus { 
+            border-color: var(--primary); 
+            outline: none; 
+            box-shadow: 0 0 0 4px rgba(0, 0, 255, 0.1); 
+        }
+        input[type="text"]::placeholder { color: var(--base-gray-60); opacity: 0.7; font-weight: 400; }
+
+        /* OpenSea 링크 안내 문구 CSS 추가 */
+        .opensea-helper {
+            margin: 10px 0 0 4px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+        .opensea-helper a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: opacity 0.2s;
+        }
+        .opensea-helper a:hover {
+            text-decoration: underline;
+            opacity: 0.8;
+        }
+
+        .action-btn {
+            width: 100%; padding: 16px; border-radius: 12px;
+            background: var(--primary); color: var(--base-white);
+            font-size: 1.05rem; font-weight: 600; border: none;
+            cursor: pointer; transition: all 0.2s ease;
+            font-family: inherit; letter-spacing: -0.01em;
+        }
+        .action-btn:hover { background: #0000CC; } 
+        .action-btn:disabled { background: var(--border-color); color: var(--text-muted); cursor: not-allowed; }
+
+        #result-box { display: none; margin-top: 32px; animation: fadeIn 0.4s ease; text-align: left;}
+        
+        .burger-info {
+            background: var(--bg-body); padding: 16px; border-radius: 12px;
+            margin-bottom: 24px; border: 1px solid var(--border-color);
+        }
+        .burger-info h3 { margin: 0 0 4px 0; font-size: 1.1rem; color: var(--text-main); font-weight: 700;}
+        .burger-info p { margin: 0; color: var(--text-muted); font-size: 0.95rem; }
+
+        .token-item {
+            background: var(--base-white); border: 1px solid var(--border-color);
+            padding: 16px; border-radius: 12px; margin-bottom: 12px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .token-name { font-weight: 700; font-size: 1.05rem; color: var(--text-main);}
+        .token-qty { font-weight: 800; color: var(--primary); font-size: 1.15rem; }
+        
+        .grade-badge { font-size: 0.75rem; padding: 4px 8px; border-radius: 6px; margin-left: 10px; color: var(--base-white); font-weight: 600; }
+
+        .social-group { margin-top: 32px; display: flex; flex-direction: column; gap: 12px; }
+        
+        .share-btn, .follow-btn {
+            display: flex; align-items: center; justify-content: center;
+            width: 100%; padding: 16px; border-radius: 12px;
+            text-decoration: none; font-weight: 600; font-size: 1.05rem;
+            transition: all 0.2s; box-sizing: border-box; font-family: inherit;
+        }
+        
+        .share-btn { background: var(--text-main); color: var(--base-white); }
+        .share-btn:hover { background: #000000; transform: translateY(-1px); }
+        
+        .follow-btn { background: var(--base-white); color: var(--text-main); border: 1px solid var(--border-color); }
+        .follow-btn:hover { background: var(--bg-body); }
+
+        .x-icon { width: 18px; height: 18px; fill: currentColor; margin-right: 8px; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .loader {
+            display: none; border: 3px solid var(--border-color); border-top: 3px solid var(--primary);
+            border-radius: 50%; width: 32px; height: 32px; animation: spin 1s linear infinite;
+            margin: 24px auto;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <img src="https://d3u2pnu58u70ht.cloudfront.net/Announcement/RB_icon.png" alt="Rolling Burger Icon" class="logo-img">
+        
+        <h1><span>BURGER</span> DISASSEMBLE SIMULATOR</h1>
+        
+        <div class="desc-box">
+            <p>1. Enter your OpenSea link and check the hidden Ingredient Tokens in your Burger NFT!</p>
+            <p>2. This is a Burger NFT disassemble simulator for Rolling Burger in the GRAM Ecosystem. It is provided for reference only, and actual token minting amounts may vary.</p>
+            <p>3. For more details about Ingredient Tokens, please refer to <a href="https://twitter.com/gram_voyage" target="_blank">@gram_voyage</a> on X (Twitter).</p>
+        </div>
+
+        <a href="https://base.app/app/zg-rbg.vercel.app" target="_blank" class="banner-link" title="Play Rolling Burger Now!">
+            <img src="https://d3u2pnu58u70ht.cloudfront.net/Announcement/RB_socialshare.png" alt="Play Rolling Burger" class="banner-img">
+        </a>
+
+        <div class="input-group">
+            <input type="text" id="burger-url" placeholder="Paste your OpenSea link here...">
+            <p class="opensea-helper">
+                <a href="https://opensea.io/collection/rollingburger" target="_blank">Check your Burger NFT on OpenSea ↗</a>
+            </p>
+        </div>
+
+        <button id="grind-btn" class="action-btn" onclick="processGrind()">Run Simulator</button>
+        <div class="loader" id="loader"></div>
+
+        <div id="result-box">
+            <div class="burger-info">
+                <h3>NFT Analysis Complete</h3>
+                <p id="info-text"></p>
+            </div>
+            <div id="tokens-container"></div>
+            
+            <div class="social-group">
+                <a id="share-btn" class="share-btn" href="#" target="_blank">
+                    <svg class="x-icon" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                    Share Result on X
+                </a>
+                <a class="follow-btn" href="https://twitter.com/intent/follow?screen_name=gram_voyage" target="_blank">
+                    <svg class="x-icon" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                    Follow @gram_voyage
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const gradeRules = {
+            "SS": [{ t: 3, p: 100 }],
+            "S":  [{ t: 2, p: 30 }, { t: 3, p: 100 }],
+            "A":  [{ t: 1, p: 10 }, { t: 2, p: 60 }, { t: 3, p: 100 }],
+            "B":  [{ t: 1, p: 40 }, { t: 2, p: 90 }, { t: 3, p: 100 }],
+            "C":  [{ t: 1, p: 70 }, { t: 2, p: 100 }],
+            "D":  [{ t: 1, p: 100 }]
+        };
+
+        const tokenData = {
+            "Truffle": { grade: "S", qty: 100, color: "var(--grade-s)" },
+            "Beef": { grade: "A", qty: 250, color: "var(--grade-a)" },
+            "Lamb": { grade: "B", qty: 2000, color: "var(--grade-b)" },
+            "Cheese": { grade: "A", qty: 250, color: "var(--grade-a)" },
+            "Napa Cabbage": { grade: "B", qty: 2000, color: "var(--grade-b)" },
+            "Pork": { grade: "C", qty: 5000, color: "var(--grade-c)" },
+            "Chicken": { grade: "C", qty: 5000, color: "var(--grade-c)" },
+            "Wheat": { grade: "D", qty: 20000, color: "var(--grade-d)" },
+            "Salt": { grade: "D", qty: 20000, color: "var(--grade-d)" },
+            "Meat Mix": { grade: "D", qty: 20000, color: "var(--grade-d)" }
+        };
+
+        const traitPool = [
+            { name: "Brioche Bun", tokens: ["Wheat", "Cheese"] },
+            { name: "Focaccia Bun", tokens: ["Wheat"] },
+            { name: "Wagyu", tokens: ["Beef"] },
+            { name: "Spam", tokens: ["Pork", "Salt"] },
+            { name: "Mystery Meat", tokens: ["Meat Mix"] },
+            { name: "Black Truffle", tokens: ["Truffle"] },
+            { name: "Kimchi", tokens: ["Napa Cabbage", "Salt"] },
+            { name: "Lamb", tokens: ["Lamb"] },
+            { name: "Chicken", tokens: ["Chicken"] }
+        ];
+
+        function hashString(str) {
+            let hash = 0;
+            for (let i = 0; i < str.length; i++) {
+                hash = str.charCodeAt(i) + ((hash << 5) - hash);
+            }
+            return Math.abs(hash);
+        }
+
+        function generateMockBurger(url) {
+            const seed = hashString(url);
+            const grades = ["SS", "S", "A", "B", "C", "D"];
+            const grade = grades[seed % grades.length]; 
+            const traits = [
+                traitPool[seed % traitPool.length],
+                traitPool[(seed + 1) % traitPool.length],
+                traitPool[(seed + 2) % traitPool.length]
+            ];
+            return { grade, traits };
+        }
+
+        function processGrind() {
+            const urlInput = document.getElementById('burger-url').value;
+            if (urlInput.trim() === "") {
+                alert("Please enter your OpenSea link first!");
+                return;
+            }
+
+            document.getElementById('grind-btn').style.display = 'none';
+            document.getElementById('loader').style.display = 'block';
+            document.getElementById('result-box').style.display = 'none';
+
+            setTimeout(() => {
+                const burger = generateMockBurger(urlInput);
+                
+                let potentialTokens = [];
+                burger.traits.forEach(t => potentialTokens.push(...t.tokens));
+                potentialTokens = [...new Set(potentialTokens)]; 
+                
+                const rules = gradeRules[burger.grade];
+                let rand = Math.random() * 100;
+                let finalTypeCount = 1;
+                for(let i=0; i<rules.length; i++) {
+                    if(rand <= rules[i].p) { finalTypeCount = rules[i].t; break; }
+                }
+
+                let finalTokens = potentialTokens.sort(() => 0.5 - Math.random()).slice(0, finalTypeCount);
+                if(finalTokens.length === 0) finalTokens = ["Wheat"]; 
+
+                document.getElementById('info-text').innerHTML = `Burger Grade: <strong style="color:var(--primary);">${burger.grade}</strong> | Extracted Types: <strong>${finalTypeCount}</strong>`;
+                
+                const container = document.getElementById('tokens-container');
+                container.innerHTML = '';
+                
+                let shareTokenNames = [];
+
+                finalTokens.forEach(tName => {
+                    const tData = tokenData[tName];
+                    shareTokenNames.push(`$${tName}`);
+                    
+                    container.innerHTML += `
+                        <div class="token-item">
+                            <div>
+                                <span class="token-name">$${tName}</span>
+                                <span class="grade-badge" style="background:${tData.color}">Grade ${tData.grade}</span>
+                            </div>
+                            <div class="token-qty">${tData.qty.toLocaleString()}</div>
+                        </div>
+                    `;
+                });
+
+                const tweetText = `🍔 I disassembled my Burger NFT and got [ ${shareTokenNames.join(", ")} ] tokens!\n\nThe Rolling Burger Disassembler will be updated soon!\nWhat assets are hidden in your burger?\n\n🔗 Simulator: http://gram.voyage\n🎮 Play Rolling Burger on @baseapp: https://base.app/app/zg-rbg.vercel.app\n\n@gram_voyage @base`;
+                
+                document.getElementById('share-btn').href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`;
+
+                document.getElementById('loader').style.display = 'none';
+                document.getElementById('result-box').style.display = 'block';
+                document.getElementById('grind-btn').style.display = 'block';
+                document.getElementById('grind-btn').innerText = "Try Another Link";
+
+            }, 1200); 
+        }
+    </script>
+</body>
+</html>
