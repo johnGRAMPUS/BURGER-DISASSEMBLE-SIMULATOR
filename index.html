@@ -80,7 +80,7 @@
         
         <div id="main-content">
             <div class="desc-box">
-                <p>1. Enter your OpenSea link and check the hidden Ingredient Tokens in your Burger NFT!</p>
+                <p>1. Check the hidden Ingredient Tokens in your Burger NFT!</p>
                 <p>2. This is a Burger NFT disassemble simulator for Rolling Burger in the GRAM Ecosystem. It is provided for reference only, and actual token minting amounts may vary.</p>
                 <p>3. For more details about Ingredient Tokens, please refer to <a href="https://twitter.com/gram_voyage" target="_blank">@gram_voyage</a> on X (Twitter).</p>
             </div>
@@ -88,10 +88,10 @@
             <div class="guide-box">
                 <h4>💡 How to find IPFS link on OpenSea</h4>
                 <ol>
-                    <li>Open your Rolling Burger on OpenSea.</li>
-                    <li>Go to the <strong>[Details]</strong> section.</li>
-                    <li>Click the link on <strong>[Token ID]</strong> (Basescan opens).</li>
-                    <li>Click the <strong>[Metadata]</strong> tab and copy the IPFS URL.</li>
+                    <li>Open your Burger NFT on OpenSea.</li>
+                    <li>Scroll down to the <strong>[Blockchain details]</strong> section.</li>
+                    <li>Click the value next to <strong>[Token ID]</strong> (this opens the IPFS metadata page).</li>
+                    <li>Copy that page link and paste it below.</li>
                 </ol>
             </div>
 
@@ -101,9 +101,9 @@
         </div>
 
         <div id="input-area">
-            <input type="text" id="burger-url" placeholder="Paste IPFS Link or Token ID...">
+            <input type="text" id="burger-url" placeholder="Paste IPFS Link...">
             <button id="grind-btn" class="action-btn" onclick="processGrind()">Run Simulator</button>
-            <button id="reset-btn" class="action-btn" style="display: none;" onclick="processGrind()">Try Another Link</button>
+            <button id="reset-btn" class="action-btn" style="display: none;" onclick="processGrind()">Try Another Burger</button>
         </div>
 
         <div class="loader" id="loader">⏳ Parsing Metadata...</div>
