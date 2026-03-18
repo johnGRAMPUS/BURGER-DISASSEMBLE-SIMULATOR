@@ -14,7 +14,7 @@
             --base-gray-10: #EEF0F3; --base-gray-15: #DEE1E7; --base-gray-60: #5B616E;
             --primary: var(--base-blue); --bg-body: var(--base-gray-10); --bg-card: var(--base-white);
             --text-main: var(--base-black); --text-muted: var(--base-gray-60); --border-color: var(--base-gray-15);
-            --grade-s: #FC401F; --grade-a: #9932CC; --grade-b: #3C8AFF; --grade-c: #66C800; --grade-d: var(--base-gray-60);
+            --grade-ss: #FF0080; --grade-s: #FC401F; --grade-a: #9932CC; --grade-b: #3C8AFF; --grade-c: #66C800; --grade-d: var(--base-gray-60);
         }
         body { font-family: 'Inter', sans-serif; background-color: var(--bg-body); color: var(--text-main); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 24px; box-sizing: border-box; }
         .container { background-color: var(--bg-card); width: 100%; max-width: 540px; padding: 40px 32px; border-radius: 16px; box-shadow: 0 4px 24px rgba(10,11,13,0.06); border: 1px solid var(--border-color); text-align: center; }
@@ -129,6 +129,10 @@
                     <svg class="x-icon" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
                     Share Result on X
                 </a>
+                <a id="base-share-btn" class="share-btn" href="#" target="_blank" style="background:#0000FF; border-color:#0000FF;">
+                    <svg class="x-icon" viewBox="0 0 111 111" fill="white"><path d="M54.7199 288C47.5199 288 43.9199 284.4 43.9199 277.2V118.8C43.9199 111.6 47.5199 108 54.7199 108H213.12C220.32 108 223.92 111.6 223.92 118.8V277.2C223.92 284.4 220.32 288 213.12 288H54.7199Z"/></svg>
+                    Share on Base App
+                </a>
                 <a class="follow-btn" href="https://twitter.com/intent/follow?screen_name=gram_voyage" target="_blank">
                     <svg class="x-icon" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
                     Follow @gram_voyage
@@ -193,19 +197,32 @@
                 metadata = await response.json();
 
                 let grade = "D", mult = "1.00x", ingredients = [], name = metadata.name || "Rolling Burger";
-                
+
+                // 토큰 매핑 대상 trait_type (콤마 구분 복수값 지원)
+                const ingredientTraits = [
+                    "meat", "grains", "dairy & eggs", "sauces, condiments & sweeteners",
+                    "fish & seafood", "vegetables", "fruits", "herbs & spices", "nuts, seeds & pulses"
+                ];
+
                 if(metadata.attributes) {
                     metadata.attributes.forEach(attr => {
-                        if (!attr.trait_type || !attr.value) return;
+                        if (!attr.trait_type || attr.value === undefined || attr.value === null) return;
                         const type = attr.trait_type.toLowerCase();
-                        const val = attr.value.toString().toLowerCase();
+                        const val = attr.value.toString();
 
+                        // ① Grade: "Grade" trait에서 원본값(SS~D) 그대로 사용
                         if (type === "grade") {
-                            grade = attr.value; 
-                        } else if (type === "synergy") {
-                            mult = (0.7 + (parseInt(val) * 0.1 - 0.1)).toFixed(2) + "x";
-                        } else {
-                            ingredients.push(val);
+                            grade = val.trim();
+                        // ② Synergy Count: 숫자 기반 multiplier 계산
+                        } else if (type === "synergy count") {
+                            const n = parseInt(val);
+                            if (!isNaN(n) && n > 0) mult = (0.7 + (n * 0.1 - 0.1)).toFixed(2) + "x";
+                        // ③ 4가지 ingredient trait: 콤마로 분리해서 각각 push
+                        } else if (ingredientTraits.includes(type)) {
+                            val.split(",").forEach(v => {
+                                const trimmed = v.trim().toLowerCase();
+                                if (trimmed) ingredients.push(trimmed);
+                            });
                         }
                     });
                 }
@@ -224,7 +241,8 @@
         function renderResult(name, grade, mult, ingredients) {
             document.getElementById('nft-title').innerText = name;
             document.getElementById('nft-grade-badge').innerText = `Grade ${grade}`;
-            document.getElementById('nft-grade-badge').style.background = `var(--grade-${grade.toLowerCase()})`;
+            const gradeColor = getComputedStyle(document.documentElement).getPropertyValue(`--grade-${grade.toLowerCase()}`).trim();
+            document.getElementById('nft-grade-badge').style.background = gradeColor || '#5B616E';
             document.getElementById('prob-text').innerHTML = `You will get <strong>${probMap[grade] || "1 type (100%)"}</strong> from the list below.`;
 
             let finalTokens = [];
@@ -243,7 +261,7 @@
                     const imgName = t.toLowerCase().replace(/ /g, '_');
                     
                     // [1.00x 숨김 처리 핵심 로직] 1.00x일 경우 빈 문자열 할당, 아닐 경우 뱃지 노출
-                    const multBadge = mult === "1.00x" ? "" : `<div class="multiplier-text">${mult}</div>`;
+                    const multBadge = "";
 
                     container.innerHTML += `
                         <div class="token-row">
@@ -256,8 +274,11 @@
                 });
             }
 
-            const shareTxt = `🍔 I checked my ${name}!\n\nThe Rolling Burger Disassembler will be updated soon!\nWhat assets are hidden in your burger?\n\n🔗 Simulator: https://rollingburgersimulator.netlify.app/\n🎮 Play: https://base.app/app/zg-rbg.vercel.app\n\n@gram_voyage @base`;
+            const shareTxt = `Wait, is this a burger or a bag? 🍔💰\n\nJust checked my ${name} and it's loaded! In the Chef Universe, every Onchain Ingredient is 100% tradable on @Base. 🟦\n\nBest game ever? Probably. 👨\u200d🍳 \nDon't just watch me eat—MINT A BURGER and join the feast! 🚀\n\n🎮 Play Rolling Burger: https://base.app/app/zg-rbg.vercel.app\n🔗 Simulator: https://rollingburgersimulator.netlify.app/\n\n@gram_voyage @baseapp`;
             document.getElementById('share-btn').href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareTxt)}`;
+
+            const baseTxt = `Wait, is this a burger or a bag? 🍔💰\n\nJust checked my ${name} and it's loaded! In the Chef Universe, every Onchain Ingredient is 100% tradable on @base.base.eth. 🟦\n\nBest game ever? Probably. 👨\u200d🍳 \nDon't just watch me eat—MINT A BURGER and join the feast! 🚀\n\n🎮 Play Rolling Burger: https://base.app/app/zg-rbg.vercel.app\n🔗 Simulator: https://rollingburgersimulator.netlify.app/\n\n@gramvoyage.base.eth`;
+            document.getElementById('base-share-btn').href = `https://base.app/intent/cast?text=${encodeURIComponent(baseTxt)}`;
 
             document.getElementById('loader').style.display = 'none';
             document.getElementById('result-box').style.display = 'block';
