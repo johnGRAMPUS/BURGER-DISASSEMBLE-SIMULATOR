@@ -7,226 +7,122 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
     <style>
         :root {
-            /* Base Official Colors */
-            --base-blue: #0000FF;
-            --base-black: #0A0B0D; 
-            --base-white: #FFFFFF; 
-            --base-gray-10: #EEF0F3;
-            --base-gray-15: #DEE1E7;
-            --base-gray-60: #5B616E;
-            
-            /* Semantic Colors */
-            --primary: var(--base-blue);
-            --bg-body: var(--base-gray-10);
-            --bg-card: var(--base-white);
-            --text-main: var(--base-black);
-            --text-muted: var(--base-gray-60);
-            --border-color: var(--base-gray-15);
-            
-            /* Token Grade Colors */
-            --grade-s: #FC401F; 
-            --grade-a: #9932CC; 
-            --grade-b: #3C8AFF; 
-            --grade-c: #66C800; 
-            --grade-d: var(--base-gray-60);
+            --base-blue: #0000FF; --base-black: #0A0B0D; --base-white: #FFFFFF; 
+            --base-gray-10: #EEF0F3; --base-gray-15: #DEE1E7; --base-gray-60: #5B616E;
+            --primary: var(--base-blue); --bg-body: var(--base-gray-10); --bg-card: var(--base-white);
+            --text-main: var(--base-black); --text-muted: var(--base-gray-60); --border-color: var(--base-gray-15);
+            --grade-s: #FC401F; --grade-a: #9932CC; --grade-b: #3C8AFF; --grade-c: #66C800; --grade-d: var(--base-gray-60);
         }
-
-        body {
-            font-family: 'Base Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background-color: var(--bg-body);
-            color: var(--text-main);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 24px;
-            box-sizing: border-box;
-            line-height: 1.5;
-        }
-
-        .container {
-            background-color: var(--bg-card);
-            width: 100%;
-            max-width: 520px;
-            padding: 40px 32px;
-            border-radius: 16px;
-            box-shadow: 0 4px 24px rgba(10, 11, 13, 0.06);
-            border: 1px solid var(--border-color);
-            text-align: center;
-        }
-
-        .logo-img {
-            width: 72px;
-            height: 72px;
-            margin-bottom: 16px;
-            border-radius: 16px; 
-            border: 1px solid var(--border-color);
-        }
-        
-        .banner-link {
-            display: block;
-            margin-bottom: 24px;
-            transition: transform 0.2s ease;
-            border-radius: 12px;
-            overflow: hidden;
-            border: 1px solid var(--border-color);
-        }
-        .banner-link:hover {
-            transform: scale(1.02);
-            border-color: var(--primary);
-        }
-        .banner-img {
-            width: 100%;
-            display: block;
-        }
-
-        h1 { 
-            margin: 0; 
-            font-size: 1.75rem; 
-            font-weight: 800; 
-            color: var(--text-main); 
-            letter-spacing: -0.02em; 
-            margin-bottom: 24px;
-        }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-body); color: var(--text-main); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 24px; box-sizing: border-box; }
+        .container { background-color: var(--bg-card); width: 100%; max-width: 540px; padding: 40px 32px; border-radius: 16px; box-shadow: 0 4px 24px rgba(10,11,13,0.06); border: 1px solid var(--border-color); text-align: center; }
+        .logo-img { width: 72px; height: 72px; margin-bottom: 16px; border-radius: 16px; border: 1px solid var(--border-color); }
+        h1 { margin: 0; font-size: 1.75rem; font-weight: 800; margin-bottom: 24px; letter-spacing: -0.02em; }
         h1 span { color: var(--primary); }
         
-        .desc-box {
-            background: #F4F7FF; 
-            padding: 20px;
-            border-radius: 12px;
-            margin-bottom: 24px;
-            text-align: left;
-            border-left: 4px solid var(--primary);
-        }
-        .desc-box p { color: var(--text-muted); font-size: 0.9rem; margin: 8px 0; font-weight: 500; }
+        .desc-box { background: #F4F7FF; padding: 20px; border-radius: 12px; margin-bottom: 24px; text-align: left; border-left: 4px solid var(--primary); }
+        .desc-box p { color: var(--text-muted); font-size: 0.9rem; margin: 8px 0; font-weight: 500; line-height: 1.5; }
         .desc-box a { color: var(--primary); text-decoration: none; font-weight: 600; }
-        .desc-box a:hover { text-decoration: underline; }
 
-        .input-group { margin-bottom: 24px; text-align: left; }
-        input[type="text"] {
-            width: 100%; padding: 16px; border-radius: 12px;
-            border: 1px solid var(--border-color); background: var(--base-white);
-            color: var(--text-main); font-size: 1rem; box-sizing: border-box;
-            transition: all 0.2s;
-            font-family: inherit;
-        }
-        input[type="text"]:focus { 
-            border-color: var(--primary); 
-            outline: none; 
-            box-shadow: 0 0 0 4px rgba(0, 0, 255, 0.1); 
-        }
-        input[type="text"]::placeholder { color: var(--base-gray-60); opacity: 0.7; font-weight: 400; }
+        .guide-box { background: var(--bg-body); padding: 18px; border-radius: 12px; margin-bottom: 24px; text-align: left; border: 1px dashed var(--primary); }
+        .guide-box h4 { margin: 0 0 10px 0; font-size: 0.95rem; color: var(--primary); font-weight: 700; }
+        .guide-box ol { margin: 0; padding-left: 20px; font-size: 0.85rem; color: var(--text-main); }
+        .guide-box li { margin-bottom: 6px; line-height: 1.4; }
 
-        /* OpenSea 링크 안내 문구 CSS 추가 */
-        .opensea-helper {
-            margin: 10px 0 0 4px;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            font-weight: 500;
-        }
-        .opensea-helper a {
-            color: var(--primary);
-            text-decoration: none;
-            font-weight: 600;
-            transition: opacity 0.2s;
-        }
-        .opensea-helper a:hover {
-            text-decoration: underline;
-            opacity: 0.8;
-        }
-
-        .action-btn {
-            width: 100%; padding: 16px; border-radius: 12px;
-            background: var(--primary); color: var(--base-white);
-            font-size: 1.05rem; font-weight: 600; border: none;
-            cursor: pointer; transition: all 0.2s ease;
-            font-family: inherit; letter-spacing: -0.01em;
-        }
-        .action-btn:hover { background: #0000CC; } 
-        .action-btn:disabled { background: var(--border-color); color: var(--text-muted); cursor: not-allowed; }
-
-        #result-box { display: none; margin-top: 32px; animation: fadeIn 0.4s ease; text-align: left;}
+        .banner-link { display: block; margin-bottom: 24px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border-color); transition: transform 0.2s; }
+        .banner-link:hover { transform: scale(1.01); }
+        .banner-img { width: 100%; display: block; }
         
-        .burger-info {
-            background: var(--bg-body); padding: 16px; border-radius: 12px;
-            margin-bottom: 24px; border: 1px solid var(--border-color);
-        }
-        .burger-info h3 { margin: 0 0 4px 0; font-size: 1.1rem; color: var(--text-main); font-weight: 700;}
-        .burger-info p { margin: 0; color: var(--text-muted); font-size: 0.95rem; }
+        #input-area { margin-bottom: 16px; text-align: left; }
+        input[type="text"] { width: 100%; padding: 16px; border-radius: 12px; border: 1px solid var(--border-color); font-size: 0.95rem; box-sizing: border-box; margin-bottom: 12px; }
+        input[type="text"]:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 4px rgba(0,0,255,0.1); }
+        
+        .action-btn { width: 100%; padding: 16px; border-radius: 12px; background: var(--primary); color: white; font-size: 1.05rem; font-weight: 600; border: none; cursor: pointer; transition: 0.2s; }
+        .action-btn:hover { background: #0000CC; }
 
-        .token-item {
-            background: var(--base-white); border: 1px solid var(--border-color);
-            padding: 16px; border-radius: 12px; margin-bottom: 12px;
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        .token-name { font-weight: 700; font-size: 1.05rem; color: var(--text-main);}
-        .token-qty { font-weight: 800; color: var(--primary); font-size: 1.15rem; }
+        /* 결과 UI */
+        #result-box { display: none; margin-top: 24px; animation: fadeIn 0.4s ease; text-align: left; }
+        .result-card { border: 1px solid var(--border-color); border-radius: 16px; background: var(--bg-body); overflow: hidden; }
+        .nft-preview { background: white; padding: 20px; display: flex; align-items: center; gap: 16px; border-bottom: 1px solid var(--border-color); }
+        .res-icon { width: 80px; height: 80px; border-radius: 12px; border: 1px solid var(--border-color); background: #f9f9f9; }
+        .nft-details h2 { margin: 0 0 6px 0; font-size: 1.25rem; font-weight: 800; color: var(--text-main); }
+        .nft-grade { font-size: 0.8rem; padding: 4px 10px; border-radius: 20px; background: var(--text-main); color: white; font-weight: 600; }
         
-        .grade-badge { font-size: 0.75rem; padding: 4px 8px; border-radius: 6px; margin-left: 10px; color: var(--base-white); font-weight: 600; }
+        .token-drops { padding: 20px; }
+        .token-drops h3 { margin: 0 0 8px 0; font-size: 1.05rem; color: var(--text-main); font-weight: 700; text-transform: uppercase; }
+        .prob-text { font-size: 0.85rem; color: var(--primary); background: #E5E5FF; padding: 10px; border-radius: 8px; margin-bottom: 16px; font-weight: 600; }
+        
+        .token-row { display: flex; align-items: center; justify-content: space-between; background: white; padding: 12px 16px; border-radius: 12px; margin-bottom: 10px; border: 1px solid var(--border-color); }
+        .token-left { display: flex; align-items: center; gap: 12px; }
+        .token-left img { width: 40px; height: 40px; border-radius: 8px; }
+        .multiplier-text { font-size: 0.85rem; font-weight: 700; color: var(--primary); }
 
-        .social-group { margin-top: 32px; display: flex; flex-direction: column; gap: 12px; }
-        
-        .share-btn, .follow-btn {
-            display: flex; align-items: center; justify-content: center;
-            width: 100%; padding: 16px; border-radius: 12px;
-            text-decoration: none; font-weight: 600; font-size: 1.05rem;
-            transition: all 0.2s; box-sizing: border-box; font-family: inherit;
-        }
-        
-        .share-btn { background: var(--text-main); color: var(--base-white); }
-        .share-btn:hover { background: #000000; transform: translateY(-1px); }
-        
-        .follow-btn { background: var(--base-white); color: var(--text-main); border: 1px solid var(--border-color); }
+        /* 소셜 쉐어 및 팔로우 버튼 */
+        .social-group { margin-top: 24px; display: flex; flex-direction: column; gap: 12px; }
+        .share-btn, .follow-btn { display: flex; align-items: center; justify-content: center; width: 100%; padding: 16px; border-radius: 12px; text-decoration: none; font-weight: 600; font-size: 1rem; transition: 0.2s; box-sizing: border-box; }
+        .share-btn { background: #0A0B0D; color: white; border: 1px solid #0A0B0D; }
+        .share-btn:hover { background: #000000; }
+        .follow-btn { background: white; color: #0A0B0D; border: 1px solid var(--border-color); }
         .follow-btn:hover { background: var(--bg-body); }
-
         .x-icon { width: 18px; height: 18px; fill: currentColor; margin-right: 8px; }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        
-        .loader {
-            display: none; border: 3px solid var(--border-color); border-top: 3px solid var(--primary);
-            border-radius: 50%; width: 32px; height: 32px; animation: spin 1s linear infinite;
-            margin: 24px auto;
-        }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .loader { display: none; margin: 20px auto; text-align: center; font-weight: 600; color: var(--primary); }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <img src="https://d3u2pnu58u70ht.cloudfront.net/Announcement/RB_icon.png" alt="Rolling Burger Icon" class="logo-img">
-        
+        <img src="https://d3u2pnu58u70ht.cloudfront.net/Announcement/RB_icon.png" class="logo-img">
         <h1><span>BURGER</span> DISASSEMBLE SIMULATOR</h1>
         
-        <div class="desc-box">
-            <p>1. Enter your OpenSea link and check the hidden Ingredient Tokens in your Burger NFT!</p>
-            <p>2. This is a Burger NFT disassemble simulator for Rolling Burger in the GRAM Ecosystem. It is provided for reference only, and actual token minting amounts may vary.</p>
-            <p>3. For more details about Ingredient Tokens, please refer to <a href="https://twitter.com/gram_voyage" target="_blank">@gram_voyage</a> on X (Twitter).</p>
+        <div id="main-content">
+            <div class="desc-box">
+                <p>1. Enter your OpenSea link and check the hidden Ingredient Tokens in your Burger NFT!</p>
+                <p>2. This is a Burger NFT disassemble simulator for Rolling Burger in the GRAM Ecosystem. It is provided for reference only, and actual token minting amounts may vary.</p>
+                <p>3. For more details about Ingredient Tokens, please refer to <a href="https://twitter.com/gram_voyage" target="_blank">@gram_voyage</a> on X (Twitter).</p>
+            </div>
+
+            <div class="guide-box">
+                <h4>💡 How to find IPFS link on OpenSea</h4>
+                <ol>
+                    <li>Open your Rolling Burger on OpenSea.</li>
+                    <li>Go to the <strong>[Details]</strong> section.</li>
+                    <li>Click the link on <strong>[Token ID]</strong> (Basescan opens).</li>
+                    <li>Click the <strong>[Metadata]</strong> tab and copy the IPFS URL.</li>
+                </ol>
+            </div>
+
+            <a href="https://base.app/app/zg-rbg.vercel.app" target="_blank" class="banner-link" id="main-banner">
+                <img src="https://d3u2pnu58u70ht.cloudfront.net/Announcement/RB_socialshare.png" class="banner-img">
+            </a>
         </div>
 
-        <a href="https://base.app/app/zg-rbg.vercel.app" target="_blank" class="banner-link" title="Play Rolling Burger Now!">
-            <img src="https://d3u2pnu58u70ht.cloudfront.net/Announcement/RB_socialshare.png" alt="Play Rolling Burger" class="banner-img">
-        </a>
-
-        <div class="input-group">
-            <input type="text" id="burger-url" placeholder="Paste your OpenSea link here...">
-            <p class="opensea-helper">
-                <a href="https://opensea.io/collection/rollingburger" target="_blank">Check your Burger NFT on OpenSea ↗</a>
-            </p>
+        <div id="input-area">
+            <input type="text" id="burger-url" placeholder="Paste IPFS Link or Token ID...">
+            <button id="grind-btn" class="action-btn" onclick="processGrind()">Run Simulator</button>
+            <button id="reset-btn" class="action-btn" style="display: none;" onclick="processGrind()">Try Another Link</button>
         </div>
 
-        <button id="grind-btn" class="action-btn" onclick="processGrind()">Run Simulator</button>
-        <div class="loader" id="loader"></div>
+        <div class="loader" id="loader">⏳ Parsing Metadata...</div>
 
         <div id="result-box">
-            <div class="burger-info">
-                <h3>NFT Analysis Complete</h3>
-                <p id="info-text"></p>
+            <div class="result-card">
+                <div class="nft-preview">
+                    <img src="https://d3u2pnu58u70ht.cloudfront.net/Announcement/RB_icon.png" class="res-icon">
+                    <div class="nft-details">
+                        <h2 id="nft-title">---</h2>
+                        <span class="nft-grade" id="nft-grade-badge">Grade -</span>
+                    </div>
+                </div>
+                <div class="token-drops">
+                    <h3>Possible Tokens</h3>
+                    <div class="prob-text" id="prob-text"></div>
+                    <div id="tokens-container"></div>
+                </div>
             </div>
-            <div id="tokens-container"></div>
             
             <div class="social-group">
                 <a id="share-btn" class="share-btn" href="#" target="_blank">
@@ -242,120 +138,130 @@
     </div>
 
     <script>
-        const gradeRules = {
-            "SS": [{ t: 3, p: 100 }],
-            "S":  [{ t: 2, p: 30 }, { t: 3, p: 100 }],
-            "A":  [{ t: 1, p: 10 }, { t: 2, p: 60 }, { t: 3, p: 100 }],
-            "B":  [{ t: 1, p: 40 }, { t: 2, p: 90 }, { t: 3, p: 100 }],
-            "C":  [{ t: 1, p: 70 }, { t: 2, p: 100 }],
-            "D":  [{ t: 1, p: 100 }]
+        const ALCHEMY_URL = ""; 
+        const PROVIDER_URL = ALCHEMY_URL.startsWith("http") ? ALCHEMY_URL : "https://mainnet.base.org";
+
+        // Trait -> Token 매핑
+        const traitMap = {
+            "brioche": ["Wheat", "Butter", "Egg"], "grandma secret": ["Wheat", "Sugar", "Butter"],
+            "wheat": ["Wheat"], "baguette": ["Wheat"], "focaccia": ["Wheat", "Olive", "Rosemary"],
+            "sesame": ["Wheat", "Sesame"], "burnt": ["Wheat"], "frozen": ["Wheat"], "moldy": ["Wheat"],
+            "wagyu": ["Beef"], "gold patty": ["Beef"], "angus": ["Beef"], "lamb": ["Lamb"],
+            "spam": ["Pork", "Salt"], "pork": ["Pork"], "chicken": ["Chicken"], "nugget": ["Chicken"],
+            "mystery meat": ["Meat Mix"], "rotten": ["Meat Mix"], "truffle": ["Truffle"], "black truffle": ["Truffle"],
+            "gold lettuce": ["Lettuce"], "avocado": ["Avocado"], "kimchi": ["Napa Cabbage", "Chili", "Garlic"],
+            "lettuce": ["Lettuce"], "tomato": ["Tomato"], "wilted": ["Lettuce"], "gold cheese": ["Cheese"],
+            "truffle cheese": ["Cheese", "Truffle"], "cheddar": ["Cheese"], "gorgonzola": ["Cheese"],
+            "mozzarella": ["Cheese"], "expired": ["Cheese"], "caviar": ["Caviar"],
+            "secret": ["Pantry Mix", "Spice Mix"], "truffle mayo": ["Truffle", "Egg"], "gochujang": ["Gochujang"],
+            "bbq": ["Tomato", "Sugar", "Spice Mix"], "ketchup": ["Tomato", "Sugar", "Vinegar"],
+            "spoiled": ["Pantry Mix"], "foie gras": ["Duck"], "mom lunch": ["Rice", "Bean Mix", "Meat Mix"],
+            "rainbow": ["Sugar", "Fruit Mix"], "pineapple": ["Fruit Mix"], "chocolate": ["Sugar", "Milk"],
+            "marshmallow": ["Sugar"], "strawberry": ["Strawberry", "Sugar"]
         };
 
-        const tokenData = {
-            "Truffle": { grade: "S", qty: 100, color: "var(--grade-s)" },
-            "Beef": { grade: "A", qty: 250, color: "var(--grade-a)" },
-            "Lamb": { grade: "B", qty: 2000, color: "var(--grade-b)" },
-            "Cheese": { grade: "A", qty: 250, color: "var(--grade-a)" },
-            "Napa Cabbage": { grade: "B", qty: 2000, color: "var(--grade-b)" },
-            "Pork": { grade: "C", qty: 5000, color: "var(--grade-c)" },
-            "Chicken": { grade: "C", qty: 5000, color: "var(--grade-c)" },
-            "Wheat": { grade: "D", qty: 20000, color: "var(--grade-d)" },
-            "Salt": { grade: "D", qty: 20000, color: "var(--grade-d)" },
-            "Meat Mix": { grade: "D", qty: 20000, color: "var(--grade-d)" }
-        };
+        const itTokenGrades = { "Caviar": "S", "Truffle": "S", "Avocado": "A", "Beef": "A", "Rosemary": "A", "Thyme": "A", "Gold Lettuce": "A", "Gold Patty": "A", "Gold Cheese": "A", "Napa Cabbage": "B", "Garlic": "B", "Gochujang": "B", "Duck": "B", "Lamb": "B", "Olive": "B", "Strawberry": "B", "Cheese": "B", "Butter": "B", "Cinnamon": "B", "Lettuce": "C", "Tomato": "C", "Chili": "C", "Sesame": "C", "Pork": "C", "Chicken": "C", "Rice": "C", "Egg": "C", "Milk": "C", "Sugar": "D", "Salt": "D", "Wheat": "D", "Meat Mix": "D", "Pantry Mix": "D", "Bean Mix": "D", "Spice Mix": "D", "Fruit Mix": "D" };
+        const probMap = { "SS": "3 types (100%)", "S": "3 types (70%), 2 types (30%)", "A": "3 types (40%), 2 types (50%), 1 type (10%)", "B": "3 types (10%), 2 types (50%), 1 type (40%)", "C": "2 types (30%), 1 type (70%)", "D": "1 type (100%)" };
+        const CONTRACT_ADDR = "0xf51998994c0256723274727e57331817a17810a0";
 
-        const traitPool = [
-            { name: "Brioche Bun", tokens: ["Wheat", "Cheese"] },
-            { name: "Focaccia Bun", tokens: ["Wheat"] },
-            { name: "Wagyu", tokens: ["Beef"] },
-            { name: "Spam", tokens: ["Pork", "Salt"] },
-            { name: "Mystery Meat", tokens: ["Meat Mix"] },
-            { name: "Black Truffle", tokens: ["Truffle"] },
-            { name: "Kimchi", tokens: ["Napa Cabbage", "Salt"] },
-            { name: "Lamb", tokens: ["Lamb"] },
-            { name: "Chicken", tokens: ["Chicken"] }
-        ];
+        async function processGrind() {
+            const input = document.getElementById('burger-url').value.trim();
+            if(!input) return alert("Please enter IPFS Link or Token ID!");
 
-        function hashString(str) {
-            let hash = 0;
-            for (let i = 0; i < str.length; i++) {
-                hash = str.charCodeAt(i) + ((hash << 5) - hash);
-            }
-            return Math.abs(hash);
-        }
-
-        function generateMockBurger(url) {
-            const seed = hashString(url);
-            const grades = ["SS", "S", "A", "B", "C", "D"];
-            const grade = grades[seed % grades.length]; 
-            const traits = [
-                traitPool[seed % traitPool.length],
-                traitPool[(seed + 1) % traitPool.length],
-                traitPool[(seed + 2) % traitPool.length]
-            ];
-            return { grade, traits };
-        }
-
-        function processGrind() {
-            const urlInput = document.getElementById('burger-url').value;
-            if (urlInput.trim() === "") {
-                alert("Please enter your OpenSea link first!");
-                return;
-            }
-
-            document.getElementById('grind-btn').style.display = 'none';
-            document.getElementById('loader').style.display = 'block';
+            document.getElementById('main-content').style.display = 'none';
             document.getElementById('result-box').style.display = 'none';
+            document.getElementById('grind-btn').style.display = 'none';
+            document.getElementById('reset-btn').style.display = 'none';
+            document.getElementById('loader').style.display = 'block';
 
-            setTimeout(() => {
-                const burger = generateMockBurger(urlInput);
-                
-                let potentialTokens = [];
-                burger.traits.forEach(t => potentialTokens.push(...t.tokens));
-                potentialTokens = [...new Set(potentialTokens)]; 
-                
-                const rules = gradeRules[burger.grade];
-                let rand = Math.random() * 100;
-                let finalTypeCount = 1;
-                for(let i=0; i<rules.length; i++) {
-                    if(rand <= rules[i].p) { finalTypeCount = rules[i].t; break; }
+            try {
+                let metadata = null;
+                let fetchUrl = "";
+
+                if (input.includes("ipfs")) {
+                    fetchUrl = input.replace("ipfs://", "https://cloudflare-ipfs.com/ipfs/");
+                    if (!fetchUrl.startsWith("http")) fetchUrl = "https://cloudflare-ipfs.com/ipfs/" + fetchUrl;
+                } else {
+                    let tokenId = input.match(/\d+$/) ? input.match(/\d+$/)[0] : "";
+                    const provider = new ethers.providers.JsonRpcProvider(PROVIDER_URL);
+                    const contract = new ethers.Contract(CONTRACT_ADDR, ["function tokenURI(uint256) view returns (string)"], provider);
+                    const rawUri = await contract.tokenURI(tokenId);
+                    fetchUrl = rawUri.replace("ipfs://", "https://cloudflare-ipfs.com/ipfs/");
                 }
 
-                let finalTokens = potentialTokens.sort(() => 0.5 - Math.random()).slice(0, finalTypeCount);
-                if(finalTokens.length === 0) finalTokens = ["Wheat"]; 
+                const response = await fetch(fetchUrl);
+                metadata = await response.json();
 
-                document.getElementById('info-text').innerHTML = `Burger Grade: <strong style="color:var(--primary);">${burger.grade}</strong> | Extracted Types: <strong>${finalTypeCount}</strong>`;
+                let grade = "D", mult = "1.00x", ingredients = [], name = metadata.name || "Rolling Burger";
                 
-                const container = document.getElementById('tokens-container');
-                container.innerHTML = '';
-                
-                let shareTokenNames = [];
+                if(metadata.attributes) {
+                    metadata.attributes.forEach(attr => {
+                        if (!attr.trait_type || !attr.value) return;
+                        const type = attr.trait_type.toLowerCase();
+                        const val = attr.value.toString().toLowerCase();
 
-                finalTokens.forEach(tName => {
-                    const tData = tokenData[tName];
-                    shareTokenNames.push(`$${tName}`);
-                    
-                    container.innerHTML += `
-                        <div class="token-item">
-                            <div>
-                                <span class="token-name">$${tName}</span>
-                                <span class="grade-badge" style="background:${tData.color}">Grade ${tData.grade}</span>
-                            </div>
-                            <div class="token-qty">${tData.qty.toLocaleString()}</div>
-                        </div>
-                    `;
-                });
+                        if (type === "grade") {
+                            grade = attr.value; 
+                        } else if (type === "synergy") {
+                            mult = (0.7 + (parseInt(val) * 0.1 - 0.1)).toFixed(2) + "x";
+                        } else {
+                            ingredients.push(val);
+                        }
+                    });
+                }
 
-                const tweetText = `🍔 I disassembled my Burger NFT and got [ ${shareTokenNames.join(", ")} ] tokens!\n\nThe Rolling Burger Disassembler will be updated soon!\nWhat assets are hidden in your burger?\n\n🔗 Simulator: http://gram.voyage\n🎮 Play Rolling Burger on @baseapp: https://base.app/app/zg-rbg.vercel.app\n\n@gram_voyage @base`;
-                
-                document.getElementById('share-btn').href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`;
+                renderResult(name, grade, mult, ingredients);
 
+            } catch (e) {
+                console.error(e);
+                alert("Failed to fetch metadata. Please ensure it's a valid IPFS link or Token ID.");
                 document.getElementById('loader').style.display = 'none';
-                document.getElementById('result-box').style.display = 'block';
                 document.getElementById('grind-btn').style.display = 'block';
-                document.getElementById('grind-btn').innerText = "Try Another Link";
+                document.getElementById('main-content').style.display = 'block';
+            }
+        }
 
-            }, 1200); 
+        function renderResult(name, grade, mult, ingredients) {
+            document.getElementById('nft-title').innerText = name;
+            document.getElementById('nft-grade-badge').innerText = `Grade ${grade}`;
+            document.getElementById('nft-grade-badge').style.background = `var(--grade-${grade.toLowerCase()})`;
+            document.getElementById('prob-text').innerHTML = `You will get <strong>${probMap[grade] || "1 type (100%)"}</strong> from the list below.`;
+
+            let finalTokens = [];
+            ingredients.forEach(ing => { 
+                if(traitMap[ing]) finalTokens.push(...traitMap[ing]); 
+            });
+            finalTokens = [...new Set(finalTokens)];
+
+            const container = document.getElementById('tokens-container');
+            container.innerHTML = '';
+            
+            if(finalTokens.length === 0) {
+                container.innerHTML = `<div style="padding: 10px; color: var(--text-muted);">No matching ingredient tokens found.</div>`;
+            } else {
+                finalTokens.forEach(t => {
+                    const imgName = t.toLowerCase().replace(/ /g, '_');
+                    
+                    // [1.00x 숨김 처리 핵심 로직] 1.00x일 경우 빈 문자열 할당, 아닐 경우 뱃지 노출
+                    const multBadge = mult === "1.00x" ? "" : `<div class="multiplier-text">${mult}</div>`;
+
+                    container.innerHTML += `
+                        <div class="token-row">
+                            <div class="token-left">
+                                <img src="https://rollingburgersimulator.netlify.app/Small_Chef_${imgName}.png" onerror="this.src='https://d3u2pnu58u70ht.cloudfront.net/Announcement/RB_icon.png'">
+                                <div class="token-info"><strong>$${t}</strong><br><small>Grade ${itTokenGrades[t] || 'D'}</small></div>
+                            </div>
+                            ${multBadge}
+                        </div>`;
+                });
+            }
+
+            const shareTxt = `🍔 I checked my ${name}!\n\nThe Rolling Burger Disassembler will be updated soon!\nWhat assets are hidden in your burger?\n\n🔗 Simulator: https://rollingburgersimulator.netlify.app/\n🎮 Play: https://base.app/app/zg-rbg.vercel.app\n\n@gram_voyage @base`;
+            document.getElementById('share-btn').href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareTxt)}`;
+
+            document.getElementById('loader').style.display = 'none';
+            document.getElementById('result-box').style.display = 'block';
+            document.getElementById('reset-btn').style.display = 'block';
         }
     </script>
 </body>
