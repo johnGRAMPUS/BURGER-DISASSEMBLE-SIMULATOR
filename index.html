@@ -335,8 +335,11 @@
         (async () => {
             try {
                 const { sdk } = await import('https://esm.sh/@farcaster/frame-sdk');
-                window._fcSdk = sdk;
-                await sdk.actions.ready();
+                const context = await sdk.context;
+                if (context) {
+                    window._fcSdk = sdk;
+                    await sdk.actions.ready();
+                }
             } catch(e) {
                 console.log('Farcaster Frame SDK not available (running outside Farcaster/Base App)');
             }
